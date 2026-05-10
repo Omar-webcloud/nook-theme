@@ -6,7 +6,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function nook_scripts() {
-    // Main stylesheet (Theme Info)
+    // Theme Info
     wp_enqueue_style(
         'nook-style',
         get_stylesheet_uri(),
@@ -14,7 +14,7 @@ function nook_scripts() {
         wp_get_theme()->get( 'Version' )
     );
 
-    // Theme CSS
+    // CSS
     wp_enqueue_style(
         'nook-main',
         get_template_directory_uri() . '/assets/css/main.css',
@@ -55,7 +55,7 @@ function nook_scripts() {
         true
     );
 
-    // Theme JS
+    //  JS
     wp_enqueue_script(
         'nook-script',
         get_template_directory_uri() . '/assets/js/main.js',

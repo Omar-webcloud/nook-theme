@@ -1,6 +1,6 @@
 <?php
 /**
- * ACF / SCF Options Page Registration
+ * SCF Options Page Registration
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
