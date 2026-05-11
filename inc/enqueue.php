@@ -1,6 +1,6 @@
 <?php
 /**
- * Enqueue scripts and styles
+ * Enqueue scripts , fonts and styles
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;

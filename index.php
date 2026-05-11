@@ -1,7 +1,7 @@
 <?php
 /**
- * The main template file.
- * WordPress requires this file. For the homepage, front-page.php is used.
+ * main template file.
+ 
  */
 get_header();
 ?>

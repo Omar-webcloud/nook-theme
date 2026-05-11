@@ -1,16 +1,13 @@
 <?php
 /**
- * Nook Furniture Theme Functions
+ * Nook Theme Functions
  *
  * @package Nook_Furniture
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-/**
- * Proper Theme Structure: 
- * All logic is separated into the inc/ directory for better maintainability.
- */
+
 
 // 1. Theme Setup (Support, Menus, Widgets)
 require get_template_directory() . '/inc/setup.php';

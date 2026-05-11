@@ -1,6 +1,6 @@
 <?php
 /**
- * Theme setup and basic registration
+ * Theme setup and registration
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -18,7 +18,7 @@ function nook_setup() {
 
     register_nav_menus( [
         'primary' => __( 'Side Menu', 'nook-furniture' ),
-    ] );
+    ] ); 
 }
 add_action( 'after_setup_theme', 'nook_setup' );
 
@@ -30,12 +30,12 @@ function nook_widgets_init() {
         'before_widget' => '<section id="%1$s" class="widget %2$s">',
         'after_widget'  => '</section>',
         'before_title'  => '<h2 class="widget-title">',
-        'after_title'   => '</h2>',
+        'after_title'   => '</h2>', 
     ] );
 }
 add_action( 'widgets_init', 'nook_widgets_init' );
 
 function nook_customize_register( $wp_customize ) {
-    // Customizer logic here
+
 }
 add_action( 'customize_register', 'nook_customize_register' );
