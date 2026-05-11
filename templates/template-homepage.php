@@ -12,27 +12,7 @@
        HERO SECTION
   ═══════════════════════════════════════ -->
   <section class="hero">
-    <nav class="nav-container">
-      <div class="logo">
-        <?php 
-        $logo = nook_get('header_logo');
-        if ( $logo ) : ?>
-          <img src="<?php echo esc_url( $logo ); ?>" alt="<?php bloginfo('name'); ?>" />
-        <?php else : ?>
-          <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/logo.svg" alt="<?php bloginfo('name'); ?>" />
-        <?php endif; ?>
-      </div>
-
-      <div class="nav-toggler">
-        <img src="<?php echo esc_url( nook_get( 'header_menu_icon', get_template_directory_uri() . '/assets/images/hamburger.svg' ) ); ?>" alt="Menu" />
-      </div>
-
-      <div class="quickxs">
-        <img src="<?php echo esc_url( nook_get( 'header_profile_icon', get_template_directory_uri() . '/assets/images/profile.svg' ) ); ?>" alt="Profile" />
-        <img src="<?php echo esc_url( nook_get( 'header_wishlist_icon', get_template_directory_uri() . '/assets/images/heart.svg' ) ); ?>" alt="Wishlist" />
-        <img src="<?php echo esc_url( nook_get( 'header_cart_icon', get_template_directory_uri() . '/assets/images/cart.svg' ) ); ?>" alt="Cart" />
-      </div>
-    </nav>
+    
 
     <div class="container">
       <div class="hero__content">
@@ -179,40 +159,61 @@
 
     <div class="products">
       <?php
-      $products = nook_get( 'popular_products' );
-      if ( $products ) :
-        foreach ( $products as $p ) :
-        ?>
-        <div class="product-card">
-          <img src="<?php echo esc_url( $p['image'] ); ?>" alt="<?php echo esc_attr( $p['name'] ); ?>" />
-          <h3><?php echo esc_html( $p['name'] ); ?></h3>
-          <p class="price"><?php echo esc_html( $p['price'] ); ?></p>
-        </div>
-        <?php endforeach; ?>
-      <?php else : 
-        $default_products = [
-            [ 'img' => 'sofa_1.png',   'name' => 'Vintage Single Sofa 2024', 'price' => 'Tk 18,500' ],
-            [ 'img' => 'chair_1.png',  'name' => 'Classic Dining Chair 2024', 'price' => 'Tk 18,000' ],
-            [ 'img' => 'chair_2.png',  'name' => 'Modern Lounge Chair 2024',  'price' => 'Tk 18,000' ],
-            [ 'img' => 'sofa_1.png',   'name' => 'Premium 3-Seat Sofa 2024',  'price' => 'Tk 18,000' ],
-            [ 'img' => 'sofa_1.png',   'name' => 'Vintage Single Sofa 2024',  'price' => 'Tk 18,500' ],
-            [ 'img' => 'chair_1.png',  'name' => 'Accent Chair 2024',         'price' => 'Tk 18,000' ],
-            [ 'img' => 'chair_2.png',  'name' => 'Tulip Chair 2024',          'price' => 'Tk 18,000' ],
-            [ 'img' => 'table-1.png',  'name' => 'Oak Coffee Table 2024',     'price' => 'Tk 18,000' ],
-        ];
-        foreach ( $default_products as $p ) :
-        ?>
-        <div class="product-card">
-          <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/<?php echo esc_attr( $p['img'] ); ?>" alt="<?php echo esc_attr( $p['name'] ); ?>" />
-          <h3><?php echo esc_html( $p['name'] ); ?></h3>
-          <p class="price"><?php echo esc_html( $p['price'] ); ?></p>
-        </div>
-        <?php endforeach; ?>
-      <?php endif; ?>
+      $popular_products_query = new WP_Query( [
+        'post_type'      => 'product',
+        'post_status'    => 'publish',
+        'posts_per_page' => 8,
+      ] );
+
+      if ( $popular_products_query->have_posts() ) :
+        while ( $popular_products_query->have_posts() ) : $popular_products_query->the_post();
+          $product_price = function_exists( 'get_field' ) ? get_field( 'product_price' ) : '';
+          ?>
+          <a class="product-card" href="<?php the_permalink(); ?>">
+            <?php if ( has_post_thumbnail() ) : ?>
+              <?php the_post_thumbnail( 'medium' ); ?>
+            <?php endif; ?>
+            <h3><?php the_title(); ?></h3>
+            <?php if ( $product_price ) : ?>
+              <p class="price"><?php echo esc_html( $product_price ); ?></p>
+            <?php endif; ?>
+          </a>
+        <?php endwhile; wp_reset_postdata(); ?>
+      <?php else :
+        $products = nook_get( 'popular_products' );
+        if ( $products ) :
+          foreach ( $products as $p ) : ?>
+            <div class="product-card">
+              <img src="<?php echo esc_url( $p['image'] ); ?>" alt="<?php echo esc_attr( $p['name'] ); ?>" />
+              <h3><?php echo esc_html( $p['name'] ); ?></h3>
+              <p class="price"><?php echo esc_html( $p['price'] ); ?></p>
+            </div>
+          <?php endforeach;
+        else :
+          $default_products = [
+              [ 'img' => 'sofa_1.png',   'name' => 'Vintage Single Sofa 2024', 'price' => 'Tk 18,500' ],
+              [ 'img' => 'chair_1.png',  'name' => 'Classic Dining Chair 2024', 'price' => 'Tk 18,000' ],
+              [ 'img' => 'chair_2.png',  'name' => 'Modern Lounge Chair 2024',  'price' => 'Tk 18,000' ],
+              [ 'img' => 'sofa_1.png',   'name' => 'Premium 3-Seat Sofa 2024',  'price' => 'Tk 18,000' ],
+              [ 'img' => 'sofa_1.png',   'name' => 'Vintage Single Sofa 2024',  'price' => 'Tk 18,500' ],
+              [ 'img' => 'chair_1.png',  'name' => 'Accent Chair 2024',         'price' => 'Tk 18,000' ],
+              [ 'img' => 'chair_2.png',  'name' => 'Tulip Chair 2024',          'price' => 'Tk 18,000' ],
+              [ 'img' => 'table-1.png',  'name' => 'Oak Coffee Table 2024',     'price' => 'Tk 18,000' ],
+          ];
+          foreach ( $default_products as $p ) : ?>
+            <div class="product-card">
+              <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/<?php echo esc_attr( $p['img'] ); ?>" alt="<?php echo esc_attr( $p['name'] ); ?>" />
+              <h3><?php echo esc_html( $p['name'] ); ?></h3>
+              <p class="price"><?php echo esc_html( $p['price'] ); ?></p>
+            </div>
+          <?php endforeach;
+        endif;
+      endif;
+      ?>
     </div>
 
     <div class="see-all">
-      <a href="<?php echo esc_url( nook_get( 'popular_see_all_link', '#' ) ); ?>" id="see-all-btn">
+      <a href="<?php echo esc_url( nook_get( 'popular_see_all_link', get_post_type_archive_link( 'product' ) ) ); ?>" id="see-all-btn">
         <?php echo esc_html( nook_get( 'popular_see_all_text', 'See All Collections' ) ); ?>
         <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/arrow.png" alt="" />
       </a>
@@ -317,7 +318,7 @@
         $btn1_icon = nook_get( 'cta_button_1_icon', get_template_directory_uri() . '/assets/images/talk.png' );
 
         $btn2_text = nook_get( 'cta_button_2_text', 'See all Collections' );
-        $btn2_link = nook_get( 'cta_button_2_link', '#' );
+        $btn2_link = nook_get( 'cta_button_2_link', get_post_type_archive_link( 'product' ) ?: '#' );
         $btn2_icon = nook_get( 'cta_button_2_icon', get_template_directory_uri() . '/assets/images/white-arrow.png' );
         ?>
         <a href="<?php echo esc_url( $btn1_link ); ?>" class="btn-quote">

@@ -22,6 +22,21 @@ function nook_setup() {
 }
 add_action( 'after_setup_theme', 'nook_setup' );
 
+function nook_register_product_post_type() {
+    register_post_type( 'product', [
+        'labels' => [
+            'name'          => __( 'Products', 'nook-furniture' ),
+            'singular_name' => __( 'Product', 'nook-furniture' ),
+        ],
+        'public'        => true,
+        'has_archive'   => true,
+        'rewrite'       => [ 'slug' => 'products' ],
+        'supports'      => [ 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields' ],
+        'show_in_rest'  => true,
+    ] );
+}
+add_action( 'init', 'nook_register_product_post_type' );
+
 function nook_widgets_init() {
     register_sidebar( [
         'name'          => __( 'Sidebar', 'nook-furniture' ),

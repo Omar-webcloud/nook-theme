@@ -3,6 +3,7 @@
     <div class="about">
       <div class="info">
         <div class="footer-logo">
+          
           <?php 
           $footer_logo = nook_get('footer_logo');
           if ( $footer_logo ) : ?>

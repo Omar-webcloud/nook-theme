@@ -63,5 +63,9 @@ function nook_scripts() {
         wp_get_theme()->get( 'Version' ),
         true
     );
+
+    wp_localize_script( 'nook-script', 'nook_params', [
+        'ajax_url' => admin_url( 'admin-ajax.php' ),
+    ] );
 }
 add_action( 'wp_enqueue_scripts', 'nook_scripts' );

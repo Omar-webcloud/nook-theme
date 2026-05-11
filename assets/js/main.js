@@ -53,15 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // ─────────────────────────────────────────
   const tags     = document.querySelectorAll('.collection-tag p');
   const products = document.querySelectorAll('.product-card');
-  const seeAllBtn = document.getElementById('see-all-btn');
-
-  if (seeAllBtn) {
-    seeAllBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-      products.forEach(function (p) { p.style.display = 'block'; });
-      tags.forEach(function (t) { t.classList.remove('active'); });
-    });
-  }
 
   tags.forEach(function (tag) {
     tag.addEventListener('click', function () {
@@ -123,5 +114,105 @@ document.addEventListener('DOMContentLoaded', function () {
 
     stats.forEach(function (stat) { observer.observe(stat); });
   }
+
+  // ─────────────────────────────────────────
+  // Cart Sidebar Logic
+  // ─────────────────────────────────────────
+  const cartSidebar = document.querySelector('.cart-sidebar');
+  const cartTrigger = document.querySelector('.cart-trigger');
+  const cartClose   = document.querySelector('.cart-close');
+  const addToCartBtn = document.querySelector('.add-to-cart');
+  const cartContent = document.querySelector('.cart-items');
+  const cartTotalAmount = document.querySelector('.total-amount');
+
+  function toggleCart() {
+    if (cartSidebar) cartSidebar.classList.toggle('active');
+    if (overlay) cartSidebar && cartSidebar.classList.contains('active') ? overlay.classList.add('active') : overlay.classList.remove('active');
+    document.body.style.overflow = cartSidebar && cartSidebar.classList.contains('active') ? 'hidden' : '';
+  }
+
+  if (cartTrigger) cartTrigger.addEventListener('click', toggleCart);
+  if (cartClose) cartClose.addEventListener('click', toggleCart);
+  if (overlay) overlay.addEventListener('click', function() {
+    if (cartSidebar && cartSidebar.classList.contains('active')) toggleCart();
+  });
+
+  // AJAX Add to Cart
+  if (addToCartBtn) {
+    addToCartBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const productId = this.getAttribute('data-product-id');
+      
+      const formData = new FormData();
+      formData.append('action', 'nook_add_to_cart');
+      formData.append('product_id', productId);
+
+      this.innerText = 'Adding...';
+      this.style.pointerEvents = 'none';
+
+      fetch(nook_params.ajax_url, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          updateCartUI(data.data);
+          if (!cartSidebar.classList.contains('active')) toggleCart();
+        }
+        this.innerText = 'Add to Cart';
+        this.style.pointerEvents = 'auto';
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        this.innerText = 'Add to Cart';
+        this.style.pointerEvents = 'auto';
+      });
+    });
+  }
+
+  // AJAX Remove from Cart (Event Delegation)
+  if (cartContent) {
+    cartContent.addEventListener('click', function(e) {
+      if (e.target.classList.contains('remove-item')) {
+        const productId = e.target.getAttribute('data-id');
+        
+        const formData = new FormData();
+        formData.append('action', 'nook_remove_from_cart');
+        formData.append('product_id', productId);
+
+        fetch(nook_params.ajax_url, {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            updateCartUI(data.data);
+          }
+        });
+      }
+    });
+  }
+
+  function updateCartUI(data) {
+    if (cartContent) cartContent.innerHTML = data.cart_html;
+    if (cartTotalAmount) cartTotalAmount.innerText = data.cart_total;
+    // Optional: Update a cart counter badge if you have one
+    const cartBadge = document.querySelector('.cart-count');
+    if (cartBadge) {
+        cartBadge.innerText = data.cart_count;
+        cartBadge.style.display = data.cart_count > 0 ? 'flex' : 'none';
+    }
+  }
+
+  // Initial Cart Load
+  fetch(nook_params.ajax_url + '?action=nook_get_cart')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        updateCartUI(data.data);
+      }
+    });
 
 });

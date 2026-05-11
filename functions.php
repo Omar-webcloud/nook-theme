@@ -20,3 +20,6 @@ require get_template_directory() . '/inc/acf-options.php';
 
 // 4. Utility Helper Functions
 require get_template_directory() . '/inc/helpers.php';
+
+// 5. Custom Cart Handler
+require get_template_directory() . '/inc/cart-handler.php';
