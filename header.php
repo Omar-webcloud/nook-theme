@@ -19,12 +19,30 @@
         'menu_class'     => '',
         'container'      => false,
         'fallback_cb'    => function() {
-            echo '<ul>
-              <li><a href="' . esc_url( home_url('/') ) . '">Home</a></li>
-              <li><a href="#">Shop</a></li>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Contact</a></li>
-            </ul>';
+            $menu_items = [
+                [
+                    'text' => nook_get( 'menu_home_text', 'Home' ),
+                    'link' => nook_get( 'menu_home_link', home_url('/') ),
+                ],
+                [
+                    'text' => nook_get( 'menu_shop_text', 'Shop' ),
+                    'link' => nook_get( 'menu_shop_link', '#' ),
+                ],
+                [
+                    'text' => nook_get( 'menu_about_text', 'About Us' ),
+                    'link' => nook_get( 'menu_about_link', '#' ),
+                ],
+                [
+                    'text' => nook_get( 'menu_contact_text', 'Contact' ),
+                    'link' => nook_get( 'menu_contact_link', '#' ),
+                ],
+            ];
+
+            echo '<ul>';
+            foreach ( $menu_items as $item ) {
+                echo '<li><a href="' . esc_url( $item['link'] ) . '">' . esc_html( $item['text'] ) . '</a></li>';
+            }
+            echo '</ul>';
         },
     ] );
     ?>
