@@ -9,10 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-get_header();
-
 if ( is_user_logged_in() ) {
-    wp_redirect( home_url( '/' ) );
+    wp_safe_redirect( home_url( '/' ) );
     exit;
 }
 
@@ -20,6 +18,8 @@ $redirect_url = home_url( '/' );
 if ( isset( $_GET['redirect_to'] ) ) {
     $redirect_url = esc_url_raw( $_GET['redirect_to'] );
 }
+
+$login_status = isset( $_GET['login'] ) ? sanitize_key( wp_unslash( $_GET['login'] ) ) : '';
 
 $form_args = [
     'redirect'       => $redirect_url,
@@ -30,6 +30,8 @@ $form_args = [
     'remember'       => true,
     'value_remember' => true,
 ];
+
+get_header();
 ?>
 
 <main class="login-page">
@@ -37,6 +39,16 @@ $form_args = [
     <div class="auth-card">
       <h1><?php esc_html_e( 'Login', 'nook-furniture' ); ?></h1>
       <p><?php esc_html_e( 'Enter your credentials to continue to checkout.', 'nook-furniture' ); ?></p>
+
+      <?php if ( 'failed' === $login_status ) : ?>
+        <div class="auth-alert auth-alert--error">
+          <p><?php esc_html_e( 'The username or password you entered is incorrect.', 'nook-furniture' ); ?></p>
+        </div>
+      <?php elseif ( 'empty' === $login_status ) : ?>
+        <div class="auth-alert auth-alert--error">
+          <p><?php esc_html_e( 'Please enter both your username and password.', 'nook-furniture' ); ?></p>
+        </div>
+      <?php endif; ?>
 
       <div class="auth-form">
         <?php wp_login_form( $form_args ); ?>

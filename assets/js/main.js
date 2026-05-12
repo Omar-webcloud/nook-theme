@@ -124,8 +124,27 @@ document.addEventListener('DOMContentLoaded', function () {
   const addToCartBtn = document.querySelector('.add-to-cart');
   const cartContent = document.querySelector('.cart-items');
   const cartTotalAmount = document.querySelector('.total-amount');
+  const userIsLoggedIn = !!(window.nook_params && nook_params.is_logged_in);
+
+  function redirectToLogin() {
+    window.location.href = nook_params.login_url;
+  }
+
+  function handleAuthResponse(data) {
+    if (data && !data.success && data.data && data.data.requiresAuth) {
+      window.location.href = data.data.login_url || nook_params.login_url;
+      return true;
+    }
+
+    return false;
+  }
 
   function toggleCart() {
+    if (!userIsLoggedIn) {
+      redirectToLogin();
+      return;
+    }
+
     if (cartSidebar) cartSidebar.classList.toggle('active');
     if (overlay) cartSidebar && cartSidebar.classList.contains('active') ? overlay.classList.add('active') : overlay.classList.remove('active');
     document.body.style.overflow = cartSidebar && cartSidebar.classList.contains('active') ? 'hidden' : '';
@@ -141,6 +160,12 @@ document.addEventListener('DOMContentLoaded', function () {
   if (addToCartBtn) {
     addToCartBtn.addEventListener('click', function(e) {
       e.preventDefault();
+
+      if (!userIsLoggedIn) {
+        redirectToLogin();
+        return;
+      }
+
       const productId = this.getAttribute('data-product-id');
       
       const formData = new FormData();
@@ -156,6 +181,8 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       .then(response => response.json())
       .then(data => {
+        if (handleAuthResponse(data)) return;
+
         if (data.success) {
           updateCartUI(data.data);
           if (!cartSidebar.classList.contains('active')) toggleCart();
@@ -177,6 +204,11 @@ document.addEventListener('DOMContentLoaded', function () {
   if (cartContent) {
     cartContent.addEventListener('click', function(e) {
       if (e.target.classList.contains('remove-item')) {
+        if (!userIsLoggedIn) {
+          redirectToLogin();
+          return;
+        }
+
         const productId = e.target.getAttribute('data-id');
         
         const formData = new FormData();
@@ -189,6 +221,8 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
+          if (handleAuthResponse(data)) return;
+
           if (data.success) {
             updateCartUI(data.data);
           }
@@ -200,6 +234,10 @@ document.addEventListener('DOMContentLoaded', function () {
   if (checkoutBtn) {
     checkoutBtn.addEventListener('click', function(e) {
       e.preventDefault();
+      if (!userIsLoggedIn) {
+        redirectToLogin();
+        return;
+      }
       window.location.href = nook_params.checkout_url;
     });
   }
@@ -216,12 +254,22 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Initial Cart Load
-  fetch(nook_params.ajax_url + '?action=nook_get_cart')
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        updateCartUI(data.data);
-      }
+  if (userIsLoggedIn) {
+    fetch(nook_params.ajax_url + '?action=nook_get_cart')
+      .then(response => response.json())
+      .then(data => {
+        if (handleAuthResponse(data)) return;
+
+        if (data.success) {
+          updateCartUI(data.data);
+        }
+      });
+  } else {
+    updateCartUI({
+      cart_html: '<p class="empty-cart">Please log in to use the cart.</p>',
+      cart_total: '$0.00',
+      cart_count: 0
     });
+  }
 
 });

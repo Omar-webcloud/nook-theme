@@ -31,7 +31,9 @@
       </div>
 
       <div class="quickxs">
-        <img src="<?php echo esc_url( nook_get( 'header_profile_icon', get_template_directory_uri() . '/assets/images/profile.svg' ) ); ?>" alt="Profile" />
+        <a href="<?php echo esc_url( nook_get_profile_url() ); ?>" class="profile-link" aria-label="<?php esc_attr_e( 'Profile', 'nook-furniture' ); ?>">
+          <img src="<?php echo esc_url( nook_get( 'header_profile_icon', get_template_directory_uri() . '/assets/images/profile.svg' ) ); ?>" alt="" />
+        </a>
         <img src="<?php echo esc_url( nook_get( 'header_wishlist_icon', get_template_directory_uri() . '/assets/images/heart.svg' ) ); ?>" alt="Wishlist" />
         <div class="cart-wrapper">
           <img src="<?php echo esc_url( nook_get( 'header_cart_icon', get_template_directory_uri() . '/assets/images/cart.svg' ) ); ?>" alt="Cart" class="cart-trigger" />

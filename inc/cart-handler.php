@@ -13,6 +13,22 @@ function nook_start_session() {
 }
 add_action( 'init', 'nook_start_session', 1 );
 
+function nook_cart_requires_login() {
+    wp_send_json_error( [
+        'message'      => __( 'Please log in to use the cart.', 'nook-furniture' ),
+        'login_url'    => nook_get_login_page_url(),
+        'cart_html'    => '<p class="empty-cart">' . esc_html__( 'Please log in to use the cart.', 'nook-furniture' ) . '</p>',
+        'cart_total'   => '$0.00',
+        'cart_count'   => 0,
+        'requiresAuth' => true,
+    ], 401 );
+}
+
+function nook_clear_cart_on_logout() {
+    unset( $_SESSION['nook_cart'] );
+}
+add_action( 'wp_logout', 'nook_clear_cart_on_logout' );
+
 // 2. AJAX Add to Cart Handler
 function nook_ajax_add_to_cart() {
     $product_id = isset( $_POST['product_id'] ) ? intval( $_POST['product_id'] ) : 0;
@@ -56,10 +72,14 @@ function nook_ajax_add_to_cart() {
     ] );
 }
 add_action( 'wp_ajax_nook_add_to_cart', 'nook_ajax_add_to_cart' );
-add_action( 'wp_ajax_nopriv_nook_add_to_cart', 'nook_ajax_add_to_cart' );
+add_action( 'wp_ajax_nopriv_nook_add_to_cart', 'nook_cart_requires_login' );
 
 // 3. Helper function to get cart HTML
 function nook_get_cart_html() {
+    if ( ! is_user_logged_in() ) {
+        return '<p class="empty-cart">' . esc_html__( 'Please log in to use the cart.', 'nook-furniture' ) . '</p>';
+    }
+
     $cart = isset( $_SESSION['nook_cart'] ) ? $_SESSION['nook_cart'] : [];
     
     if ( empty( $cart ) ) {
@@ -84,6 +104,10 @@ function nook_get_cart_html() {
 
 // 4. Helper function to get cart total
 function nook_get_cart_total() {
+    if ( ! is_user_logged_in() ) {
+        return '$0.00';
+    }
+
     $cart = isset( $_SESSION['nook_cart'] ) ? $_SESSION['nook_cart'] : [];
     $total = 0;
     foreach ( $cart as $item ) {
@@ -96,6 +120,10 @@ function nook_get_cart_total() {
 
 // 5. Helper function to get cart count
 function nook_get_cart_count() {
+    if ( ! is_user_logged_in() ) {
+        return 0;
+    }
+
     $cart = isset( $_SESSION['nook_cart'] ) ? $_SESSION['nook_cart'] : [];
     $count = 0;
     foreach ( $cart as $item ) {
@@ -119,7 +147,7 @@ function nook_ajax_remove_from_cart() {
     ] );
 }
 add_action( 'wp_ajax_nook_remove_from_cart', 'nook_ajax_remove_from_cart' );
-add_action( 'wp_ajax_nopriv_nook_remove_from_cart', 'nook_ajax_remove_from_cart' );
+add_action( 'wp_ajax_nopriv_nook_remove_from_cart', 'nook_cart_requires_login' );
 
 // 7. Initial Cart Load AJAX
 function nook_ajax_get_cart() {
@@ -130,4 +158,4 @@ function nook_ajax_get_cart() {
     ] );
 }
 add_action( 'wp_ajax_nook_get_cart', 'nook_ajax_get_cart' );
-add_action( 'wp_ajax_nopriv_nook_get_cart', 'nook_ajax_get_cart' );
+add_action( 'wp_ajax_nopriv_nook_get_cart', 'nook_cart_requires_login' );

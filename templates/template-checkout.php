@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! is_user_logged_in() ) {
-    wp_redirect( nook_get_login_page_url( get_permalink() ) );
+    wp_safe_redirect( nook_get_login_page_url( get_permalink() ) );
     exit;
 }
 

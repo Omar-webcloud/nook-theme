@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( is_user_logged_in() ) {
-    wp_redirect( home_url( '/' ) );
+    wp_safe_redirect( home_url( '/' ) );
     exit;
 }
 
@@ -50,7 +50,7 @@ if ( $registration_open && 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POS
             wp_new_user_notification( $user_id, null, 'user' );
             wp_set_current_user( $user_id );
             wp_set_auth_cookie( $user_id );
-            wp_redirect( home_url( '/' ) );
+            wp_safe_redirect( home_url( '/' ) );
             exit;
         }
     }
