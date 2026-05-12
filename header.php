@@ -51,34 +51,9 @@
     <?php
     wp_nav_menu( [
         'theme_location' => 'primary',
-        'menu_class'     => '',
+        'menu_class'     => 'side-menu__list',
         'container'      => false,
-        'fallback_cb'    => function() {
-            $menu_items = [
-                [
-                    'text' => nook_get( 'menu_home_text', 'Home' ),
-                    'link' => nook_get( 'menu_home_link', home_url('/') ),
-                ],
-                [
-                    'text' => nook_get( 'menu_shop_text', 'Shop' ),
-                    'link' => nook_get( 'menu_shop_link', '#' ),
-                ],
-                [
-                    'text' => nook_get( 'menu_about_text', 'About Us' ),
-                    'link' => nook_get( 'menu_about_link', '#' ),
-                ],
-                [
-                    'text' => nook_get( 'menu_contact_text', 'Contact' ),
-                    'link' => nook_get( 'menu_contact_link', '#' ),
-                ],
-            ];
-
-            echo '<ul>';
-            foreach ( $menu_items as $item ) {
-                echo '<li><a href="' . esc_url( $item['link'] ) . '">' . esc_html( $item['text'] ) . '</a></li>';
-            }
-            echo '</ul>';
-        },
+        'fallback_cb'    => false,
     ] );
     ?>
   </div>
