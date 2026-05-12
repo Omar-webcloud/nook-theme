@@ -46,7 +46,8 @@
           </div>
         </div>
 
-        <!-- Right card -->
+                  <!--          Right card       -->
+
         <div class="hero__product-card">
           <img class="hero__product-image card__image-right" src="<?php echo esc_url( nook_get( 'hero_right_image', get_template_directory_uri() . '/assets/images/Minimal-tulip.png' ) ); ?>" alt="<?php echo esc_attr( nook_get( 'hero_right_title', 'Minimal Tulip Chair 2024' ) ); ?>" />
           <div class="card__content">

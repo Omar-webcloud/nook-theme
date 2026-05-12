@@ -171,6 +171,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  const checkoutBtn = document.querySelector('.checkout-btn');
+
   // AJAX Remove from Cart (Event Delegation)
   if (cartContent) {
     cartContent.addEventListener('click', function(e) {
@@ -192,6 +194,13 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         });
       }
+    });
+  }
+
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = nook_params.checkout_url;
     });
   }
 

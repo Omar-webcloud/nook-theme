@@ -1114,6 +1114,141 @@ header {
   background-color: #003737;
 }
 
+.checkout-page {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 80px 70px;
+  color: #303635;
+}
+
+.checkout-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.checkout-header h1 {
+  font-size: 56px;
+  line-height: 1.05;
+  font-family: "Roslindale-DeckNarrow", serif;
+  margin-bottom: 16px;
+}
+
+.checkout-header p {
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  color: #5f6060;
+  max-width: 760px;
+}
+
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 40px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.checkout-summary,
+.checkout-sidebar {
+  background-color: #ffffff;
+  border: 1px solid #E5E5E5;
+  border-radius: 24px;
+  padding: 32px;
+}
+
+.checkout-summary h2 {
+  font-size: 28px;
+  font-family: "Roslindale-display-medium", serif;
+  margin-bottom: 24px;
+  color: #303635;
+}
+
+.checkout-cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.checkout-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.checkout-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #E5E5E5;
+  font-size: 22px;
+  font-family: "Roslindale-bold", sans-serif;
+}
+
+.place-order,
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 18px 22px;
+  background-color: #00494a;
+  color: #ffffff;
+  border-radius: 14px;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: background 0.2s ease;
+}
+
+.place-order:hover,
+.button:hover {
+  background-color: #003737;
+}
+
+.empty-checkout {
+  color: #6f7a7a;
+  font-family: "Inter", sans-serif;
+  line-height: 1.6;
+}
+
+.checkout-sidebar .cart-items .cart-item {
+  gap: 20px;
+  border-color: #F5F5F5;
+}
+
+.checkout-sidebar .cart-item__details h4 {
+  font-size: 18px;
+}
+
+.checkout-sidebar .cart-item__price {
+  font-size: 15px;
+}
+
+@media (max-width: 950px) {
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .checkout-page {
+    padding: 40px 24px;
+  }
+
+  .checkout-header h1 {
+    font-size: 42px;
+  }
+
+  .checkout-sidebar,
+  .checkout-summary {
+    padding: 24px;
+  }
+}
+
 @media (max-width: 480px) {
   .cart-sidebar {
     width: 100%;
